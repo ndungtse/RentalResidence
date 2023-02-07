@@ -18,8 +18,8 @@ target/
 *.iws
 *.iml
 *.ipr
-# hide application.properties files
-/src/main/resources/application.properties
+# hide application-dev.yml files
+/src/main/resources/application-dev.yml
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
