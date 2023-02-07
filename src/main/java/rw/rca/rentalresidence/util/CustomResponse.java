@@ -1,12 +1,12 @@
 package rw.rca.rentalresidence.util;
 
-public class CustomResponse {
+public class CustomResponse<DataType> {
     private String message;
     private String devMessage;
-    private Object data;
+    private DataType data;
     private boolean success;
 
-    public CustomResponse(String message, Object data, boolean success, String devMessage) {
+    public CustomResponse(String message, DataType data, boolean success, String devMessage) {
         this.message = message;
         this.data = data;
         this.success = success;
@@ -17,7 +17,7 @@ public class CustomResponse {
         this.message = message;
     }
 
-    public CustomResponse(String message, Object data, Boolean success) {
+    public CustomResponse(String message, DataType data, Boolean success) {
         this.message = message;
         this.data = data;
         this.success = success;
@@ -36,11 +36,11 @@ public class CustomResponse {
         this.message = message;
     }
 
-    public Object getData() {
+    public DataType getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(DataType data) {
         this.data = data;
     }
 

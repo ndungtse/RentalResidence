@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rw.rca.rentalresidence.model.User;
 import rw.rca.rentalresidence.service.UserService;
+import rw.rca.rentalresidence.util.CustomResponse;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -24,23 +25,44 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> findAll() {
-        return userService.findAll();
+    public CustomResponse<List<User>> findAll() {
+        try {
+            return new CustomResponse<>("Users found successfully", userService.findAll(), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new CustomResponse<>("Users not found", null, false);
+        }
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable String id) {
-        return userService.findById(id);
+    public CustomResponse<User> findById(@PathVariable String id) {
+        try {
+            return new CustomResponse<>("User found successfully", userService.findById(id), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new CustomResponse<>("User not found", null, false);
+        }
     }
 
     @PostMapping
-    public User save(@RequestBody User user) {
-        return userService.save(user);
+    public CustomResponse<User> save(@RequestBody User user) {
+        try {
+            return new CustomResponse<>("User saved successfully", userService.save(user), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new CustomResponse<>("User not saved", null, false);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable String id) {
-        userService.deleteById(id);
+    public CustomResponse<User> deleteById(@PathVariable String id) {
+        try {
+            userService.deleteById(id);
+            return new CustomResponse<>("User deleted successfully", null, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new CustomResponse<>("User not deleted", null, false);
+        }
     }
 }
 
