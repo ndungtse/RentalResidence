@@ -1,5 +1,6 @@
 package rw.rca.rentalresidence.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
@@ -11,6 +12,7 @@ import java.util.List;
 @Document(collection = "users")
 public class User {
     @Id
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
 
     @NotBlank
@@ -76,6 +78,10 @@ public class User {
 
     public void setProperties(List<Property> properties) {
         this.properties = properties;
+    }
+
+    public String getId() {
+        return id;
     }
 }
 

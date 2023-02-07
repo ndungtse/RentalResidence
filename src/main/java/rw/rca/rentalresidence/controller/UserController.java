@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import rw.rca.rentalresidence.dto.UserDTO;
 import rw.rca.rentalresidence.model.User;
 import rw.rca.rentalresidence.service.UserService;
 import rw.rca.rentalresidence.util.CustomResponse;
@@ -25,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping
-    public CustomResponse<List<User>> findAll() {
+    public CustomResponse<List<UserDTO>> findAll() {
         try {
             return new CustomResponse<>("Users found successfully", userService.findAll(), true);
         } catch (Exception e) {
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public CustomResponse<User> findById(@PathVariable String id) {
+    public CustomResponse<UserDTO> findById(@PathVariable String id) {
         try {
             return new CustomResponse<>("User found successfully", userService.findById(id), true);
         } catch (Exception e) {
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping
-    public CustomResponse<User> save(@RequestBody User user) {
+    public CustomResponse<UserDTO> save(@RequestBody User user) {
         try {
             return new CustomResponse<>("User saved successfully", userService.save(user), true);
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public CustomResponse<User> deleteById(@PathVariable String id) {
+    public CustomResponse<UserDTO> deleteById(@PathVariable String id) {
         try {
             userService.deleteById(id);
             return new CustomResponse<>("User deleted successfully", null, true);
