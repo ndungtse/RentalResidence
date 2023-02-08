@@ -1,26 +1,26 @@
 package rw.rca.rentalresidence.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.mongodb.lang.NonNull;
+import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Document(collection = "users")
 public class User {
     @Id
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
 
-    @NotBlank
+    @NonNull
     private String name;
-    @NotBlank
-    @Email
+    @NonNull
     private String email;
-    @NotBlank
+    @NonNull
     private String password;
     private String phoneNumber;
 

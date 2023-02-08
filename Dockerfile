@@ -1,4 +1,5 @@
 FROM openjdk as builder
+RUN chmod +x ./mvnw
 COPY . .
 RUN ./mvnw clean package
 
