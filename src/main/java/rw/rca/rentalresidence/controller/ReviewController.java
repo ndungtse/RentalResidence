@@ -1,5 +1,6 @@
 package rw.rca.rentalresidence.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
@@ -21,43 +22,43 @@ public class ReviewController {
     }
 
     @PostMapping
-    public CustomResponse<Review> createReview(@RequestBody Review review) {
+    public ResponseEntity<CustomResponse<Review>> createReview(@RequestBody Review review) {
         try {
-            return new CustomResponse<>("Review created successfully", reviewService.createReview(review), true);
+            return ResponseEntity.created(null).body(new CustomResponse<>("Review created successfully", reviewService.createReview(review), true));
         } catch (Exception e) {
             e.printStackTrace();
-            return new CustomResponse<>("Review not created", null, false);
+            return ResponseEntity.badRequest().body(new CustomResponse<>("Review not created", null, false));
         }
     }
 
     @GetMapping
-    public CustomResponse<List<Review>> getAllReviews() {
+    public ResponseEntity<CustomResponse<List<Review>>> getAllReviews() {
         try {
-            return new CustomResponse<>("Reviews found successfully", reviewService.getAllReviews(), true);
+            return ResponseEntity.ok(new CustomResponse<>("Reviews found successfully", reviewService.getAllReviews(), true));
         } catch (Exception e) {
             e.printStackTrace();
-            return new CustomResponse<>("Reviews not found", null, false);
+            return ResponseEntity.badRequest().body(new CustomResponse<>("Reviews not found", null, false));
         }
     }
 
     @GetMapping("/{id}")
-    public CustomResponse<Optional<Review>> getReviewById(@PathVariable("id") String id) {
+    public ResponseEntity<CustomResponse<Optional<Review>>> getReviewById(@PathVariable("id") String id) {
         try {
-            return new CustomResponse<>("Review found successfully", reviewService.getReviewById(id), true);
+            return ResponseEntity.ok(new CustomResponse<>("Review found successfully", reviewService.getReviewById(id), true));
         } catch (Exception e) {
             e.printStackTrace();
-            return new CustomResponse<>("Review not found", null, false);
+            return ResponseEntity.badRequest().body(new CustomResponse<>("Review not found", null, false));
         }
     }
 
     @DeleteMapping("/{id}")
-    public CustomResponse<?> deleteReview(@PathVariable("id") String id) {
+    public ResponseEntity<CustomResponse<?>> deleteReview(@PathVariable("id") String id) {
         try {
             reviewService.deleteReview(id);
-            return new CustomResponse<>("Review deleted successfully", null, true);
+            return ResponseEntity.accepted().body(new CustomResponse<>("Review deleted successfully", null, true));
         } catch (Exception e) {
             e.printStackTrace();
-            return new CustomResponse<>("Review not deleted", null, false);
+            return ResponseEntity.badRequest().body(new CustomResponse<>("Review not deleted", null, false));
         }
     }
 }

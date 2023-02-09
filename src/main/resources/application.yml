@@ -1,0 +1,17 @@
+server:
+  port: 7070
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  profiles:
+    active: prod
+  output:
+    ansi:
+      enabled: always
+app:
+  jwt:
+    secret: rentalJwtSecretKey
+  authorities:
+    USER: USER
+    ADMIN: ADMIN

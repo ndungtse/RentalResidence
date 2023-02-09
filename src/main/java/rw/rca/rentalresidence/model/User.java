@@ -3,6 +3,8 @@ package rw.rca.rentalresidence.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mongodb.lang.NonNull;
 import lombok.AllArgsConstructor;
+import rw.rca.rentalresidence.util.Role;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -26,6 +28,9 @@ public class User {
 
     @DBRef
     private List<Booking> bookings;
+
+    // user role default is user
+    private Role role = Role.USER;
 
     @DBRef
     private List<Property> properties;
@@ -83,5 +88,12 @@ public class User {
     public String getId() {
         return id;
     }
-}
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+}

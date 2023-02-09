@@ -2,11 +2,10 @@ package rw.rca.rentalresidence.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rw.rca.rentalresidence.model.Booking;
 import rw.rca.rentalresidence.service.BookingService;
+import rw.rca.rentalresidence.util.CustomResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,34 +16,50 @@ import java.util.Optional;
 public class BookingController {
    private final BookingService bookingService;
 
-   @Autowired
    public BookingController(BookingService bookingService) {
       this.bookingService = bookingService;
    }
 
    @PostMapping
    @ApiOperation(value = "Create a booking")
-   public Booking createBooking(@RequestBody Booking booking) {
-      return bookingService.createBooking(booking);
+   public CustomResponse<Booking> createBooking(@RequestBody Booking booking) {
+      try {
+         return new CustomResponse<>("Booking created successfully", bookingService.createBooking(booking), true);
+      } catch (Exception e) {
+         return new CustomResponse<>("Booking creation failed", null, false);
+      }
    }
 
    @GetMapping
    @ApiOperation(value = "View a list of available bookings", response = List.class)
-   public List<Booking> getAllBookings() {
-      return bookingService.getAllBookings();
+   public CustomResponse<List<Booking>> getAllBookings() {
+      try {
+         return new CustomResponse<>("Bookings retrieved successfully", bookingService.getAllBookings(), true);
+      } catch (Exception e) {
+         return new CustomResponse<>("Bookings retrieval failed", null, false);
+      }
    }
 
    @GetMapping("/{id}")
    @ApiOperation(value = "Get a booking by Id")
-   public ResponseEntity<Booking> getBookingById(@PathVariable("id") String id) {
-      Optional<Booking> booking = bookingService.getBookingById(id);
-      return booking.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+   public CustomResponse<Booking> getBookingById(@PathVariable("id") String id) {
+      try {
+         Optional<Booking> booking = bookingService.getBookingById(id);
+         return new CustomResponse<>("Booking retrieved successfully", booking.get(), true);
+      } catch (Exception e) {
+         return new CustomResponse<>("Booking retrieval failed", null, false);
+      }
    }
 
    @DeleteMapping("/{id}")
    @ApiOperation(value = "Delete a booking")
-   public void deleteBooking(@PathVariable("id") String id) {
-      bookingService.deleteBooking(id);
+   public CustomResponse<?> deleteBooking(@PathVariable("id") String id) {
+      try {
+         bookingService.deleteBooking(id);
+         return new CustomResponse<>("Booking deleted successfully", null, true);
+      } catch (Exception e) {
+         return new CustomResponse<>("Booking deletion failed", null, false);
+      }
    }
 }
 

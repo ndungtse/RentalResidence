@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import rw.rca.rentalresidence.model.User;
 
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class UserDTOMapper implements Function<User, UserDTO> {
