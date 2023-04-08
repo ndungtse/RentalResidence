@@ -13,13 +13,14 @@ public class CustomErrorController implements ErrorController {
 
     @RequestMapping("/error")
     public CustomResponse<?> handleError(HttpServletRequest request) {
+        System.out.println("error in /error");
         Object error = request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
         if (error instanceof Exception) {
             return new CustomResponse<>("Something went wrong.", ((Exception) error).getMessage());
         }
-        System.out.println("error "+request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE));
-        System.out.println("error "+request.getAttribute(RequestDispatcher.ERROR_MESSAGE));
-        return new CustomResponse<>("Something went wrong.", "Error Message: " + request.getAttribute(RequestDispatcher.ERROR_MESSAGE ));
+        System.out.println("error " + request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE));
+        System.out.println("error " + request.getAttribute(RequestDispatcher.ERROR_MESSAGE));
+        return new CustomResponse<>("Something went wrong.", "Error Message: " + request.getAttribute(RequestDispatcher.ERROR_MESSAGE));
     }
 
 

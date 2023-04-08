@@ -5,16 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import rw.rca.rentalresidence.dto.AuthResponseDto;
 import rw.rca.rentalresidence.dto.LoginDto;
 import rw.rca.rentalresidence.dto.UserDTO;
 import rw.rca.rentalresidence.model.User;
-import rw.rca.rentalresidence.security.JwtTokenProvider;
 import rw.rca.rentalresidence.service.UserService;
 import rw.rca.rentalresidence.util.CustomResponse;
 
@@ -26,16 +22,14 @@ import java.util.List;
 public class AuthController {
 
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(UserService userService, JwtTokenProvider jwtTokenProvider,
+    public AuthController(UserService userService,
                           BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping(path = "/register")
@@ -53,17 +47,11 @@ public class AuthController {
     @PostMapping(path = "/login")
     @ApiOperation(value = "User login", notes = "User login authentication in our application")
     public ResponseEntity<CustomResponse<AuthResponseDto>> authLogin(@RequestBody LoginDto loginDto) {
-        String jwt = null;
         System.out.println("loginDto" + loginDto);
         try {
-            System.out.println("Try to auth");
-            Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-            System.out.println("after auth");
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            jwt = jwtTokenProvider.generateToken(authentication);
-            return ResponseEntity.created(null)
-                    .body(new CustomResponse<>("User logged in successfully", userService.userLogin(loginDto, jwt),
+            AuthResponseDto res = userService.userLogin(loginDto);
+            return ResponseEntity.accepted()
+                    .body(new CustomResponse<>("User logged in successfully", res,
                             true));
         } catch (Exception e) {
             e.printStackTrace();
