@@ -22,14 +22,9 @@ import java.util.List;
 public class AuthController {
 
     private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final AuthenticationManager authenticationManager;
 
-    public AuthController(UserService userService,
-                          BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationManager authenticationManager) {
+    public AuthController(UserService userService, AuthenticationManager authenticationManager) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @PostMapping(path = "/register")
@@ -59,16 +54,4 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new CustomResponse<>("User not loggedin", null, false));
         }
     }
-
-    @GetMapping
-    @ApiResponse(code = 200, message = "Users found successfully", response = UserDTO.class)
-    public ResponseEntity<CustomResponse<List<UserDTO>>> findAll() {
-        try {
-            return ResponseEntity.ok(new CustomResponse<>("Users found successfully", userService.findAll(), true));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(new CustomResponse<>("Users not found", null, false));
-        }
-    }
-
 }
