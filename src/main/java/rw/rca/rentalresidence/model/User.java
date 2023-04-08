@@ -30,12 +30,19 @@ public class User {
     private List<Booking> bookings;
 
     // user role default is user
-    private Role role = Role.USER;
+    private List<String> roles = List.of(Role.USER);
 
     @DBRef
     private List<Property> properties;
 
     // getters and setters
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -55,6 +62,10 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<String> getRoles() {
+        return roles;
     }
 
     public void setPassword(String password) {
@@ -85,15 +96,7 @@ public class User {
         this.properties = properties;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Role getRole() {
-        return role;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }

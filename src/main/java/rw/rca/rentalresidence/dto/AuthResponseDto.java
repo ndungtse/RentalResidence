@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import rw.rca.rentalresidence.model.User;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +22,4 @@ public class AuthResponseDto {
 
     private User user;
 
-    private List<User> users;
 }

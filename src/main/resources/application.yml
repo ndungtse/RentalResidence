@@ -5,13 +5,14 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   profiles:
-    active: prod
+    active: dev
   output:
     ansi:
       enabled: always
 app:
   jwt:
     secret: rentalJwtSecretKey
+    expiresIn: 86400000
   authorities:
     USER: USER
     ADMIN: ADMIN

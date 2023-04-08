@@ -1,22 +1,24 @@
 package rw.rca.rentalresidence.controller;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 import rw.rca.rentalresidence.dto.AuthResponseDto;
 import rw.rca.rentalresidence.dto.LoginDto;
 import rw.rca.rentalresidence.dto.UserDTO;
 import rw.rca.rentalresidence.model.User;
+import rw.rca.rentalresidence.security.JwtTokenProvider;
 import rw.rca.rentalresidence.service.UserService;
 import rw.rca.rentalresidence.util.CustomResponse;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -24,20 +26,24 @@ import rw.rca.rentalresidence.util.CustomResponse;
 public class AuthController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, JwtTokenProvider jwtTokenProvider,
+                          BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping(path = "/register")
-    @ApiOperation(
-            value = "User register",
-            notes = "User registration in our application",
-            response = AuthResponseDto.class
-    )
-    public ResponseEntity<CustomResponse<User>> authRegister(@RequestBody  User user){
+    @ApiOperation(value = "User register", notes = "User registration in our application", response = AuthResponseDto.class)
+    public ResponseEntity<CustomResponse<User>> authRegister(@RequestBody User user) {
         try {
-            return ResponseEntity.created(null).body(new CustomResponse<>("User registered successfully", userService.userRegister(user), true));
+            return ResponseEntity.created(null)
+                    .body(new CustomResponse<>("User registered successfully", userService.userRegister(user), true));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new CustomResponse<>("User not registered", null, false));
@@ -45,17 +51,25 @@ public class AuthController {
     }
 
     @PostMapping(path = "/login")
-    @ApiOperation(
-            value = "User login",
-            notes = "User login authentication in our application"
-    )
+    @ApiOperation(value = "User login", notes = "User login authentication in our application")
     public ResponseEntity<CustomResponse<AuthResponseDto>> authLogin(@RequestBody LoginDto loginDto) {
+        String jwt = null;
+        System.out.println("loginDto" + loginDto);
         try {
-            return ResponseEntity.created(null).body(new CustomResponse<>("User logged in successfully", userService.userLogin(loginDto), true));
+            System.out.println("Try to auth");
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+            System.out.println("after auth");
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            jwt = jwtTokenProvider.generateToken(authentication);
+            return ResponseEntity.created(null)
+                    .body(new CustomResponse<>("User logged in successfully", userService.userLogin(loginDto, jwt),
+                            true));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(new CustomResponse<>("User not logged in", null, false));
-        }   
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(new CustomResponse<>("User not loggedin", null, false));
+        }
     }
 
     @GetMapping
@@ -68,5 +82,5 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new CustomResponse<>("Users not found", null, false));
         }
     }
-    
+
 }

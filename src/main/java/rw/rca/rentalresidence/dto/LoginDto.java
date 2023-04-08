@@ -11,13 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class LoginDto {
-
-        // @NotBlank(
-        // message = "Email is required"
-        // )
-        // @Email(
-        // message = "Email must be valid"
-        // )
         @ApiModelProperty(notes = "Email", example = "bernard@gmail.com", required = true)
         private String email;
 
