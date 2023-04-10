@@ -15,8 +15,10 @@ public class RegisterDto {
     private String names;
 
     @ApiModelProperty(notes = "Email", example = "bernard@gmail.com", required = true)
-
     private String email;
+
+    @ApiModelProperty(notes = "Phone", example = "+250781234567", required = false)
+    private String phoneNumber;
 
     @ApiModelProperty(notes = "Password", example = "#Password123", required = true)
     private String password;

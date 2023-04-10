@@ -7,7 +7,7 @@ import java.util.List;
 
 public record UserDTO(
         String id,
-        String name,
+        String names,
         String email,
         String phoneNumber,
         List<Booking> bookings,

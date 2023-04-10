@@ -10,11 +10,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import rw.rca.rentalresidence.dto.AuthResponseDto;
 import rw.rca.rentalresidence.dto.LoginDto;
+import rw.rca.rentalresidence.dto.RegisterDto;
 import rw.rca.rentalresidence.dto.UserDTO;
 import rw.rca.rentalresidence.dto.UserDTOMapper;
 import rw.rca.rentalresidence.model.User;
 import rw.rca.rentalresidence.repository.UserRepository;
 import rw.rca.rentalresidence.security.JwtTokenProvider;
+import rw.rca.rentalresidence.util.Mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,13 +40,14 @@ public class UserService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public User userRegister(User registerDto) throws NotFoundException, Exception {
+    public User userRegister(RegisterDto registerDto) throws NotFoundException, Exception {
         User findUser = userRepository.findByEmail(registerDto.getEmail());
         if (findUser != null) {
             throw new Exception("User already exists");
         }
         registerDto.setPassword(bCryptPasswordEncoder.encode(registerDto.getPassword()));
-        return userRepository.save(registerDto);
+        User user = Mapper.modelMapper.map(registerDto, User.class);
+        return userRepository.save(user);
     }
 
     public AuthResponseDto userLogin(LoginDto loginDto) throws NotFoundException, Exception {

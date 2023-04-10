@@ -23,7 +23,7 @@ public class User {
     private String id;
 
     @NonNull
-    private String name;
+    private String names;
     @NonNull
     private String email;
     @NonNull
@@ -38,4 +38,8 @@ public class User {
 
     @DBRef
     private List<Property> properties;
+
+    public User() {
+
+    }
 }
