@@ -38,7 +38,7 @@ public class SwaggerConfig {
                 "Backend API's for this application",
                 "1.0",
                 "Terms of service",
-                new springfox.documentation.service.Contact("Ishimwe Ndungutse Charles", "#",
+                new springfox.documentation.service.Contact("Ishimwe Ndungutse Charles", "https://ndungutsecharles.me/",
                         "ndungutsecharles103@gmail.com"),
                 "License of API",
                 "API license URL",

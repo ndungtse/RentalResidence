@@ -6,8 +6,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 import rw.rca.rentalresidence.dto.AuthResponseDto;
 import rw.rca.rentalresidence.dto.LoginDto;
 import rw.rca.rentalresidence.dto.RegisterDto;
@@ -22,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -106,5 +110,24 @@ public class UserService {
         user.setRoles(roles);
         User updatedUser = userRepository.save(user);
         return userDTOMapper.apply(updatedUser);
+    }
+
+    // get logged in user
+    public UserDTO getLoggedInUser() throws Exception {
+        String names;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("Principal: " + principal);
+        if (principal instanceof UserDetails) {
+            names = ((UserDetails) principal).getUsername();
+        } else {
+            names = principal.toString();
+        }
+        log.info("Logged in user names: " + names);
+        User user = userRepository.findByNames(names);
+        // throw exception if user not found
+        if (user == null) {
+            throw new Exception("Not Logged In");
+        }
+        return userDTOMapper.apply(user);
     }
 }

@@ -7,11 +7,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import rw.rca.rentalresidence.exceptions.BadRequestException;
 import rw.rca.rentalresidence.model.User;
 import rw.rca.rentalresidence.repository.UserRepository;
 
 @Service
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
@@ -24,6 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadByUserId(String id) {
         User user = this.userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+        log.info("User found with id: " + user.getId());
         return UserPrincipal.create(user);
     }
 
