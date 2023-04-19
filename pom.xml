@@ -15,7 +15,7 @@
 	<name>rentalresidence</name>
 	<description>This is a project for a rental residence. It is a web application that allows users to search for rental residences in the area.</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<!-- swagger -->
