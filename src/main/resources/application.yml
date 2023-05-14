@@ -5,7 +5,7 @@ spring:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
   profiles:
-    active: dev
+    active: prod
   output:
     ansi:
       enabled: always
