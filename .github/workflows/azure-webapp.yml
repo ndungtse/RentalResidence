@@ -14,11 +14,11 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
-      working-directory: my-app-path
+      run: mvn clean package -DskipTests
+      working-directory: ./rentalresidence
     - name: Azure WebApp
       uses: Azure/webapps-deploy@v2
       with:
         app-name: rentalresidence
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: target/*.war
+        package: ./rentalresidence/target/rentalresidence-0.0.1-SNAPSHOT.jar
