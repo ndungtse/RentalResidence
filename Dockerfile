@@ -1,15 +1,9 @@
-#
-# Build stage
-#
-FROM maven:3.8.2-jdk-17 AS build
-COPY . .
-RUN ./mvnw clean package -DskipTests
-
-#
-# Package stage
-#
-FROM openjdk:17-jdk-slim
-COPY --from=build /target/rentalresidence-0.0.1-SNAPSHOT.jar rentalresidence.jar
-# ENV PORT=8080
+FROM openjdk:8-jdk-alpine
+VOLUME /tmp
+ARG JAVA_OPTS
+ENV JAVA_OPTS=$JAVA_OPTS
+COPY target/rentalresidence-0.0.1-SNAPSHOT.jar rentalresidence.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","rentalresidence.jar"]
+# ENTRYPOINT exec java $JAVA_OPTS -jar rentalresidence.jar
+# For Spring-Boot project, use the entrypoint below to reduce Tomcat startup time.
+ENTRYPOINT exec java $JAVA_OPTS -Dspring.profiles.active=prod -Djava.security.egd=file:/dev/./urandom -jar rentalresidence.jar
