@@ -1,5 +1,8 @@
 package rw.rca.rentalresidence.controller;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +38,18 @@ public class ReviewController {
     public ResponseEntity<CustomResponse<List<Review>>> getAllReviews() {
         try {
             return ResponseEntity.ok(new CustomResponse<>("Reviews found successfully", reviewService.getAllReviews(), true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new CustomResponse<>("Reviews not found", null, false));
+        }
+    }
+
+    @GetMapping("/pageable")
+    public ResponseEntity<CustomResponse<?>> getAllReviews(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                           @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        try {
+            Pageable pageable = PageRequest.of(page, limit, Sort.Direction.ASC, "id");
+            return ResponseEntity.ok(new CustomResponse<>("Reviews found successfully", reviewService.getAllReviews(pageable), true));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new CustomResponse<>("Reviews not found", null, false));

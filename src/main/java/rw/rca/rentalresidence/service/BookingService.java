@@ -1,6 +1,8 @@
 package rw.rca.rentalresidence.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rw.rca.rentalresidence.model.Booking;
 import rw.rca.rentalresidence.repository.BookingRepository;
@@ -23,6 +25,9 @@ public class BookingService {
 
    public List<Booking> getAllBookings() {
       return bookingRepository.findAll();
+   }
+   public Page<Booking> getAllBookings(Pageable pageable) {
+      return bookingRepository.findAll(pageable);
    }
 
    public Optional<Booking> getBookingById(String id) {

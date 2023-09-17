@@ -2,6 +2,10 @@ package rw.rca.rentalresidence.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import rw.rca.rentalresidence.model.Booking;
 import rw.rca.rentalresidence.service.BookingService;
@@ -39,6 +43,19 @@ public class BookingController {
          return new CustomResponse<>("Bookings retrieval failed", null, false);
       }
    }
+
+    @GetMapping("/pageable")
+    @ApiOperation(value = "View a list of available bookings", response = List.class)
+    public CustomResponse<Page<Booking>> getAllBookings(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                        @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        try {
+           Pageable pageable = PageRequest.of(page, limit, Sort.Direction.ASC, "id");
+//            return new CustomResponse<>("Bookings retrieved successfully", bookingService.getAllBookings(pageable), true);
+            return new CustomResponse<>("Bookings retrieved successfully", bookingService.getAllBookings(pageable), true);
+        } catch (Exception e) {
+            return new CustomResponse<>("Bookings retrieval failed", null, false);
+        }
+    }
 
    @GetMapping("/{id}")
    @ApiOperation(value = "Get a booking by Id")

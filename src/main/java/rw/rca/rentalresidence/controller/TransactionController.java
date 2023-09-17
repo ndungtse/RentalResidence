@@ -2,6 +2,10 @@ package rw.rca.rentalresidence.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import rw.rca.rentalresidence.model.Transaction;
 import rw.rca.rentalresidence.service.TransactionService;
@@ -41,6 +45,19 @@ public class TransactionController {
          return ResponseEntity.badRequest().body(new CustomResponse<>("Transactions not found", null, false));
       }
    }
+
+    @GetMapping("/pageable")
+    @ApiOperation(value = "View a list of available transactions", response = List.class)
+    public ResponseEntity<CustomResponse<Page<Transaction>>> getAllTransactions(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                                                 @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        try {
+           Pageable pageable = PageRequest.of(page, limit, Sort.Direction.ASC, "id");
+            return ResponseEntity.ok(new CustomResponse<>("Transactions found successfully", transactionService.getAllTransactions(pageable), true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new CustomResponse<>("Transactions not found", null, false));
+        }
+    }
 
    @GetMapping("/{id}")
    @ApiOperation(value = "Get a transaction by Id")

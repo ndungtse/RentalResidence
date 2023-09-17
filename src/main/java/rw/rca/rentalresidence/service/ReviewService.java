@@ -3,6 +3,8 @@ package rw.rca.rentalresidence.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import rw.rca.rentalresidence.model.Review;
@@ -22,6 +24,10 @@ public class ReviewService {
 
    public List<Review> getAllReviews() {
       return reviewRepository.findAll();
+   }
+
+   public Page<Review> getAllReviews(Pageable pageable) {
+      return reviewRepository.findAll(pageable);
    }
 
    public Optional<Review> getReviewById(String id) {
