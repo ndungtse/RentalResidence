@@ -2,6 +2,10 @@ package rw.rca.rentalresidence.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import rw.rca.rentalresidence.dto.UserDTO;
@@ -27,6 +31,19 @@ public class UserController {
     public ResponseEntity<CustomResponse<List<UserDTO>>> findAll() {
         try {
             return ResponseEntity.ok(new CustomResponse<>("Users found successfully", userService.findAll(), true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new CustomResponse<>("Users not found", null, false));
+        }
+    }
+
+    @GetMapping("/pageable")
+    @ApiResponse(code = 200, message = "Users found successfully", response = UserDTO.class)
+    public ResponseEntity<CustomResponse<Page<UserDTO>>> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                                 @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        try {
+            Pageable pageable = PageRequest.of(page, limit, Sort.Direction.ASC, "id");
+            return ResponseEntity.ok(new CustomResponse<>("Users found successfully", userService.findAll(pageable), true));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new CustomResponse<>("Users not found", null, false));

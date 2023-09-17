@@ -1,6 +1,10 @@
 package rw.rca.rentalresidence.controller;
 
 import io.swagger.annotations.Api;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rw.rca.rentalresidence.model.Property;
@@ -41,6 +45,19 @@ public class PropertyController {
          return ResponseEntity.badRequest().body(new CustomResponse<>("Properties not found", null, false));
       }
    }
+
+    @GetMapping("/pageable")
+    public ResponseEntity<CustomResponse<Page<Property>>> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                                  @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        try {
+           Pageable pageable = PageRequest.of(page, limit, Sort.Direction.ASC, "id");
+            return ResponseEntity
+                    .ok(new CustomResponse<>("Properties found successfully", propertyService.findAll(pageable), true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new CustomResponse<>("Properties not found", null, false));
+        }
+    }
 
    @GetMapping("/{id}")
    public ResponseEntity<CustomResponse<Property>> findById(@PathVariable String id) {

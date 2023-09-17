@@ -1,6 +1,8 @@
 package rw.rca.rentalresidence.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rw.rca.rentalresidence.model.Transaction;
 import rw.rca.rentalresidence.repository.TransactionRepository;
@@ -23,6 +25,10 @@ public class TransactionService {
 
    public List<Transaction> getAllTransactions() {
       return transactionRepository.findAll();
+   }
+
+   public Page<Transaction> getAllTransactions(Pageable pageable) {
+      return transactionRepository.findAll(pageable);
    }
 
    public Optional<Transaction> getTransactionById(String id) {

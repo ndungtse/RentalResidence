@@ -2,6 +2,8 @@ package rw.rca.rentalresidence.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -81,6 +83,10 @@ public class UserService {
 
         return userRepository.findAll()
                 .stream().map(userDTOMapper).collect(Collectors.toList());
+    }
+
+    public Page<UserDTO> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userDTOMapper);
     }
 
     public UserDTO findById(String id) {

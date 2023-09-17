@@ -1,5 +1,7 @@
 package rw.rca.rentalresidence.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -22,6 +24,10 @@ public class PropertyService {
 
     public List<Property> findAll() {
         return propertyRepository.findAll();
+    }
+
+    public Page<Property> findAll(Pageable pageable) {
+        return propertyRepository.findAll(pageable);
     }
 
     public Property findById(String id) {
